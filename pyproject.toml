@@ -1,0 +1,23 @@
+# pyproject.toml
+
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rfm69-serial"
+version = "0.0.1"
+description = "A serial bridge package to connect RFM69 module to PC"
+readme = "README.md"
+authors = [{ name = "Long Pham", email = "longpear@gmail.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: GPL v3 License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["rfm69", "serial", "bridge"]
+dependencies = [
+    "pyserial >= 3.0",
+]
+requires-python = ">=3.6"

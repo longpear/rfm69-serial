@@ -1,0 +1,243 @@
+:py:mod:`RFM69Serial.device`
+============================
+
+.. py:module:: RFM69Serial.device
+
+
+Module Contents
+---------------
+
+.. py:data:: RFM69_FSTEP
+   :annotation: = 61.03515625
+
+   
+
+.. py:class:: Rfm69SerialDevice(address=1, network=101, port='/dev/ttyACM0')
+
+   Bases: :py:obj:`serial.Serial`
+
+   Serial port implementation for .NET/Mono.
+
+   .. py:method:: device_address(self)
+      :property:
+
+
+   .. py:method:: network_id(self)
+      :property:
+
+
+   .. py:method:: is_encrypted(self)
+      :property:
+
+
+   .. py:method:: set_dev_address(self, address)
+
+      Set the address of RFM69 module, default value is 1
+      Note: it should noted that the device address in this library is currently limited to 254, though
+      the original Arduino RFM69 implement maximum 1024 nodes in a network. The reason is for simplicity.
+      This may be reviewed and improved in the next version ;P
+
+      :param address: nominated address of the RFM69 module
+      :return: True if the device's address is set, False otherwise.
+
+
+   .. py:method:: set_network_id(self, nid)
+
+      Set the network ID of RFM69 module, default value is 101
+
+      :param nid: nominated network ID, max 255
+      :return: True if the device's network ID is set, False otherwise.
+
+
+   .. py:method:: send_msg(self, target_addr, msg, ack_request=False)
+
+      Send a single message to target device specified by target address.
+      This method covers the send() function in RFM69 Arduino library.
+
+      :param  target_addr: the address of receiving Arduino board.
+      :param  msg: message to send, message must be of type string or a list of byte values (0-255).
+      :param  ack_request: acknowledge request status, if True, the request is embedded in the message.
+
+      :return: True if the message is sent, False otherwise.
+
+
+   .. py:method:: send_msg_with_retry(self, target_addr, msg, retries=2, time_out=50)
+
+      Send a single message a number (retries) of times to ensure the message deliverance.
+      This method covers the sendWithRetry() function in RFM69 Arduino library.
+
+      :param  target_addr: the address of receiving Arduino board.
+      :param  msg: message to send, message must be of type string or a list of byte values (0-255)
+      :param  retries: number of times the sender attempts to send the message to the receiver.
+      :param  time_out: each attempt waits for "time_out" miliseconds before moving to the next attempt.
+
+      :return: True if the message is sent, False otherwise.
+
+
+   .. py:method:: begin_receive(self)
+
+      Change RFM69 module from TX to RX and wait for message to arrive.
+      This method covers receiveBegin() function in RFM69 Arduino library.
+
+      :return: True if state changed, False otherwise.
+
+
+   .. py:method:: receive_done(self)
+
+      Check if there is a newly received message in device's memory.
+      This method covers receiveDone() function in RFM69 Arduino library.
+
+      :return: True if there is a new message, False otherwise.
+
+
+   .. py:method:: ACK_received(self, target_addr=2)
+
+      Check if an acknowledge is embedded in newly received message from the device at target_addr
+      Should be polled immediately after sending a packet with ACK request
+
+
+   .. py:method:: ACK_requested(self)
+
+      Check whether an ACK was requested in the last received packet
+              
+
+
+   .. py:method:: send_ACK(self, msg)
+
+      Send back an acknowledge message to the sender if ACK_requested is detected.
+      Should be called immediately after reception in case sender wants ACK.
+
+      :param msg: some message to be sent along with ACK.
+
+      :return: True if ACK is sent, False otherwise.
+
+
+   .. py:method:: get_frequency(self)
+
+      Read the current frequency setting from RFM69 module.
+      This method covers getFrequency() function in RFM69 Arduino library.
+
+      :return: current set carrier frequency (in decimal) if read command succeeded. None if failed.
+
+
+   .. py:method:: set_frequency(self, freq=915000000)
+
+      Set the carrier frequency of RFM69 module to a specific value/
+      This method covers getFrequency() function in RFM69 Arduino library.
+
+      :param freq: nominated carrier frequency to be set for the RFM69 module (in decimal)
+
+      :return: True if set, False otherwise.
+
+
+   .. py:method:: encrypt(self, key='samplekey16bytes')
+
+      Enable/Disable encryption feature on RFM69 module.
+      This method covers encrypt() function in RFM69 Arduino library.
+
+      :param key: 16-byte long encryption key to be set for RFM69 module's AES engine.
+                  If the key is set to null string (''), the encryption mode is disabled.
+                  If no key is provided, the encryption mode is set to be enabled with default key 'samplekey16bytes'.
+
+      :return: True if the command was acknowledge, False otherwie.
+
+
+   .. py:method:: set_chip_select(self, pin=0)
+
+      Set chip select pin on the serial device.
+      This method covers setCS() function in RFM69 Arduino library.
+
+      :param pin: nominated dev board's digital pin for chip select
+
+      :return: True if the pin is set, False otherwise.
+
+
+   .. py:method:: set_interrupt_pin(self, pin=0)
+
+      Set interrupt pin on the serial device.
+      This method covers setIrq() function in RFM69 Arduino library.
+
+      :param pin: nominated dev board's digital pin for interrupt function.
+
+      :return: True if the pin is set, False otherwise.
+
+
+   .. py:method:: get_rssi(self, force=False)
+
+      Get signal strength value from RFM69 module.
+      This method covers readRSSI() function in RFM69 Arduino library.
+
+      :param force: Force trigger state.
+
+      :return: RSSI value in decimal if read command is successful. None otherwise.
+
+
+   .. py:method:: set_spy(self, enable=False)
+
+      Enable RFM69 module promiscuous mode to listen to any packet in the network.
+      This method covers spyMode() function in RFM69 Arduino library.
+
+      :param enable: bool value to enable/disable the spy mode. default to False.
+
+      :return: True if the command is successful. False otherwise.
+
+
+   .. py:method:: set_high_power(self, enable=True)
+
+
+   .. py:method:: set_power_level(self, level=100)
+
+
+   .. py:method:: get_power_level(self)
+
+
+   .. py:method:: sleep(self)
+
+      Put the RFM69 module into sleep mode.
+
+      :return: True if the module is set to sleep. False otherwise.
+
+
+   .. py:method:: read_temperature(self)
+
+
+   .. py:method:: rc_calibration(self)
+
+
+   .. py:method:: read_register(self, reg_addr)
+
+      Read value from configuraton and status registers built-in RFM69 module.
+      This method covers readReg() function in RFM69 Arduino library.
+
+      :param reg_addr: Register address, it must be of type bytes
+
+      :return: the current value of the register @reg_addr if successful. None if failed.
+
+
+   .. py:method:: write_register(self, reg_addr, value)
+
+      Write value to specific configuraton and status registers built-in RFM69 module.
+      This method covers writeReg() function in RFM69 Arduino library.
+
+      :param reg_addr: Register address, it must be of type bytes
+      :param value: specific value to write to register @reg_addr, must be of type bytes
+
+      :return True if write command is successful, False otherwise.
+
+
+   .. py:method:: get_rx_data(self)
+
+      Request rx data from the middle man.
+      Note: The first byte of RX data is always the sender ID (address).
+
+      :return: If success, returns a list of data with the very first byte containing sender ID, else, None.
+
+
+   .. py:method:: is_device_connected(self)
+
+      Check if serial device is online and connected.
+
+      :return: True if the serial device is present and connected to PC, False otherwise
+
+
+

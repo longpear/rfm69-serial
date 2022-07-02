@@ -1,0 +1,15 @@
+:py:mod:`RFM69Serial`
+=====================
+
+.. py:module:: RFM69Serial
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   device/index.rst
+
+
