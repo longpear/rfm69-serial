@@ -1,0 +1,68 @@
+:py:mod:`RFM69Serial.RFClient`
+==============================
+
+.. py:module:: RFM69Serial.RFClient
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   RFM69Serial.RFClient.Rfm69SerialDevice
+
+
+
+
+.. py:class:: Rfm69SerialDevice(address=1, network=101, port='/dev/ttyACM0')
+
+   Bases: :py:obj:`serial.Serial`
+
+   Serial port implementation for .NET/Mono.
+
+   .. py:method:: set_dev_address(self, address)
+
+
+   .. py:method:: set_network_id(self, nid)
+
+
+   .. py:method:: send_msg(self, target_id=2, msg='')
+
+
+   .. py:method:: send_msg_with_retry(self)
+
+
+   .. py:method:: begin_receive(self)
+
+
+   .. py:method:: receive_done(self)
+
+
+   .. py:method:: ACK_received(self)
+
+
+   .. py:method:: ACK_requested(self)
+
+
+   .. py:method:: send_ACK(self)
+
+
+   .. py:method:: get_frequency(self)
+
+
+   .. py:method:: set_frequency(self)
+
+
+   .. py:method:: encrypt(self)
+
+
+   .. py:method:: fetch_rx_data(self)
+
+
+   .. py:method:: is_device_connected(self)
+
+
+
