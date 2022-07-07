@@ -1,0 +1,37 @@
+:py:mod:`RFM69Serial.packet`
+============================
+
+.. py:module:: RFM69Serial.packet
+
+
+Module Contents
+---------------
+
+.. py:class:: RFM69Packet(addr=0)
+
+   RFM69 packet class to store received message in a defined data structure.
+   Currently, each packet object contains information about sender address and received message
+   from the sender. The class also provides a public method to convert data list to string if necessary.
+
+   __slots__ is used to reduce memory.
+
+   .. py:attribute:: __slots__
+      :annotation: = ['_sender_addr', '_message_data']
+
+      
+
+   .. py:method:: sender(self)
+      :property:
+
+
+   .. py:method:: message(self)
+      :property:
+
+
+   .. py:method:: message_to_string(self)
+
+      Convert message data list to string if string type message is required by callers.
+              
+
+
+

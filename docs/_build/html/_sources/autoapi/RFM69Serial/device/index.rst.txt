@@ -12,17 +12,28 @@ Module Contents
 
    
 
-.. py:class:: Rfm69SerialDevice(address=1, network=101, port='/dev/ttyACM0')
+.. py:class:: Rfm69SerialDevice(address=1, network=101, cs_pin=0, int_pin=1, port='/dev/ttyACM0', time_out=1)
 
    Bases: :py:obj:`serial.Serial`
 
-   Serial port implementation for .NET/Mono.
+   This class provides serial device objects that represent physical RFM69 module as if it is connected
+   directly to PC/Laptop.
+   Thus, device parameters such as addresses, pin configurations are passed to constructor to create a runnable
+   serial device object.
 
    .. py:method:: device_address(self)
       :property:
 
 
    .. py:method:: network_id(self)
+      :property:
+
+
+   .. py:method:: chip_select_pin(self)
+      :property:
+
+
+   .. py:method:: interrupt_pin(self)
       :property:
 
 
@@ -227,10 +238,11 @@ Module Contents
 
    .. py:method:: get_rx_data(self)
 
-      Request rx data from the middle man.
-      Note: The first byte of RX data is always the sender ID (address).
+      Request received data from RFM69 device.
+      This method assumes that the caller already checked for message received status.
 
-      :return: If success, returns a list of data with the very first byte containing sender ID, else, None.
+      :return: If success, returns a RFM69Packet object containing sender address and the received message.
+      Else, None.
 
 
    .. py:method:: is_device_connected(self)

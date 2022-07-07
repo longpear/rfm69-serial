@@ -1,27 +1,40 @@
+import time
 import serial
+from RFM69Serial import RFM69Packet
 
 # Constants and globals
 RFM69_FSTEP = 61.03515625
 
 
 class Rfm69SerialDevice(serial.Serial):
-    def __init__(self, address=1, network=101, port="/dev/ttyACM0"):
-        super(Rfm69SerialDevice, self).__init__(port=port)
+    """This class provides serial device objects that represent physical RFM69 module as if it is connected
+    directly to PC/Laptop.
+    Thus, device parameters such as addresses, pin configurations are passed to constructor to create a runnable
+    serial device object.
+    """
+
+    def __init__(self, address=1, network=101, cs_pin=0, int_pin=1, port="/dev/ttyACM0", time_out=1):
+        super(Rfm69SerialDevice, self).__init__(port=port, timeout=time_out)
 
         self._devAddress = address
         self._networkID = network
 
-        # storage for custom chip select and interrupt pins
-        self._CS_Pin = 0
-        self._Int_Pin = 0
+        # storage for chip select and interrupt pins
+        self._CS_Pin = cs_pin
+        self._Int_Pin = int_pin
 
         # encryption mode data
         self._is_encrypted = False
         self._encryption_key = 'samplekey16bytes'
 
-        # configure physical device
-        self.set_dev_address(address)
-        self.set_network_id(network)
+        # initialize RFM69 module
+        t_start = time.perf_counter()
+        while time.perf_counter() - t_start < 10:
+            time.sleep(0.1) # Hardware deceleration factor
+            if self._init_rf_module():
+                break
+        else:
+            raise TimeoutError("Could not connect to RFM69 device!")
 
     @property
     def device_address(self):
@@ -32,18 +45,22 @@ class Rfm69SerialDevice(serial.Serial):
         return self._networkID
 
     @property
+    def chip_select_pin(self):
+        return self._CS_Pin
+
+    @property
+    def interrupt_pin(self):
+        return self._Int_Pin
+
+    @property
     def is_encrypted(self):
         return self._is_encrypted
 
-    @is_encrypted.setter
-    def is_encrypted(self, enable=False):
-        self._is_encrypted = enable
-
-    def _serial_transfer(self, command):
-        """Perform single serial transaction for data exchange between PC and Arduino device
-        This is the atomic utility function for RFM69 serial bridge library. It should be noted that the method
-        only suitable for covering SET functions. GET functons that return multiple data bytes should be handled
-        differently.
+    def _serial_transfer(self, command) -> bool:
+        """Perform single serial transaction for data exchange between PC and Arduino devices.
+        This is the atomic utility method for RFM69 Serial bridge library. It should be noted that the method
+        only suitable for covering SET-type functions. GET-type functons that return data bytes should be
+        handled differently as they may return values different than Boolean.
 
         :param  command: a single or serie of bytes object(s) to transfer to the Arduino device. It should be noted
             that command always start with $ followed by opcode and data arguments.
@@ -61,6 +78,21 @@ class Rfm69SerialDevice(serial.Serial):
             return True
         else:
             return False
+
+    def _init_rf_module(self):
+        """Initialize RFM69 module via Serial port.
+        This function is called by the constructor method right after device parameters are established.
+
+        :return: True if the RFM69 module is initialized successfully, False otherwise.
+        """
+
+        serial_cmd = b'$\x00'
+        serial_cmd += self._devAddress.to_bytes(1, 'little')
+        serial_cmd += self._networkID.to_bytes(1, 'little')
+        serial_cmd += self._CS_Pin.to_bytes(1, 'little')
+        serial_cmd += self._Int_Pin.to_bytes(1, 'little')
+
+        return self._serial_transfer(serial_cmd)
 
     def set_dev_address(self, address):
         """Set the address of RFM69 module, default value is 1
@@ -276,7 +308,7 @@ class Rfm69SerialDevice(serial.Serial):
         :return: True if the pin is set, False otherwise.
         """
 
-        if type(pin) == int and 0 < pin < 255:
+        if type(pin) == int and 0 <= pin < 255:
             serial_cmd = b'$\x0D' + pin.to_bytes(1, 'little')
             self._CS_Pin = pin
         else:
@@ -292,7 +324,7 @@ class Rfm69SerialDevice(serial.Serial):
         :return: True if the pin is set, False otherwise.
         """
 
-        if type(pin) == int and 0 < pin < 255:
+        if type(pin) == int and 0 <= pin < 255:
             serial_cmd = b'$\x0E' + pin.to_bytes(1, 'little')
             self._Int_Pin = pin
         else:
@@ -393,13 +425,15 @@ class Rfm69SerialDevice(serial.Serial):
             raise TypeError("Target register address and value must be of type bytes")
 
     def get_rx_data(self):
-        """Request rx data from the middle man.
-        Note: The first byte of RX data is always the sender ID (address).
+        """Request received data from RFM69 device.
+        This method assumes that the caller already checked for message received status.
 
-        :return: If success, returns a list of data with the very first byte containing sender ID, else, None.
+        :return: If success, returns a RFM69Packet object containing sender address and the received message.
+        Else, None.
         """
 
-        rx_data = []
+        rx_packet = RFM69Packet()
+
         serial_cmd = b'$\x1E'
         self.write(serial_cmd)
 
@@ -408,11 +442,12 @@ class Rfm69SerialDevice(serial.Serial):
             recv += self.read()
         self.reset_input_buffer()
 
-        for item in recv:
-            rx_data.append(item)
+        ack_byte = recv[0]
+        rx_packet.sender = recv[1]
+        rx_packet.message = recv[2:]
 
-        if rx_data[0] == 121:
-            return rx_data[1:]
+        if ack_byte == 121:
+            return rx_packet
         else:
             return None
 

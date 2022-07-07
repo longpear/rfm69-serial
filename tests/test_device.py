@@ -3,20 +3,30 @@ import unittest
 from RFM69Serial import Rfm69SerialDevice
 
 
+# Test parameter set for physical boards
+cs_pin = 10
+int_pin = 8
+device_addr = 2
+server_addr = 1
+network_id = 101
+device_port = "/dev/ttyACM0"
+
+
 class TestRfm69SerialDevice(unittest.TestCase):
     def setUp(self) -> None:
-        self.test_device = Rfm69SerialDevice()
+        self.test_device = Rfm69SerialDevice(device_addr, network_id, cs_pin, int_pin, port=device_port)
 
     def test_good_instance(self):
         self.assertIsInstance(self.test_device, Rfm69SerialDevice)
 
         # Test initial values
-        self.assertEqual(1, self.test_device.device_address)
-        self.assertEqual(101, self.test_device.network_id)
+        self.assertEqual(device_addr, self.test_device.device_address)
+        self.assertEqual(network_id, self.test_device.network_id)
 
     def test_device_connected(self):
         self.assertTrue(self.test_device.is_device_connected())
 
+    @unittest.skip("Require RF module to perform")
     def test_roundtrip(self):
         """Sending a message and receive it back from the receiver
 
@@ -25,7 +35,6 @@ class TestRfm69SerialDevice(unittest.TestCase):
         """
 
         test_string = "test"
-        return_string = ''
         target_addr = 2
 
         self.test_device.send_msg(target_addr, test_string)
@@ -33,13 +42,12 @@ class TestRfm69SerialDevice(unittest.TestCase):
         self.test_device.begin_receive()
         while time.perf_counter() - t_start < 0.5:
             if self.test_device.receive_done():
-                recv_data = self.test_device.get_rx_data()[1:]
-                for item in recv_data:
-                    return_string += chr(item)
+                recv_data = self.test_device.get_rx_data()
+                return_string = recv_data.message_to_string()
                 self.assertEqual(test_string, return_string)
                 break
         else:
-            print("Test Failed because of Time-out, pls check serial connection!")
+            print("Test roundtrip failed because of Time-out, pls check serial connection!")
 
     def test_get_rssi(self):
         rssi_value = self.test_device.get_rssi()
@@ -78,4 +86,6 @@ class TestRfm69SerialDevice(unittest.TestCase):
         recv_value = self.test_device.read_register(reg_addr)
         self.assertEqual(reg_value, recv_value)
 
-
+    def tearDown(self) -> None:
+        self.test_device.sleep()
+        self.test_device.close()

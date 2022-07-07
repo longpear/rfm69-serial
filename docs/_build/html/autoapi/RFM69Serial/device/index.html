@@ -4,7 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
     <title>RFM69Serial.device &#8212; rfm69-serial 0.0.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
@@ -18,6 +19,7 @@
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="RFM69Serial.packet" href="../packet/index.html" />
     <link rel="prev" title="RFM69Serial" href="../index.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -29,6 +31,9 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="../packet/index.html" title="RFM69Serial.packet"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../index.html" title="RFM69Serial"
              accesskey="P">previous</a> |</li>
@@ -44,9 +49,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-RFM69Serial.device">
+  <section id="module-RFM69Serial.device">
 <span id="rfm69serial-device"></span><h1><a class="reference internal" href="#module-RFM69Serial.device" title="RFM69Serial.device"><code class="xref py py-mod docutils literal notranslate"><span class="pre">RFM69Serial.device</span></code></a><a class="headerlink" href="#module-RFM69Serial.device" title="Permalink to this heading">¶</a></h1>
-<div class="section" id="module-contents">
+<section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">¶</a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="RFM69Serial.device.RFM69_FSTEP">
@@ -55,9 +60,12 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="RFM69Serial.device.Rfm69SerialDevice">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RFM69Serial.device.</span></span><span class="sig-name descname"><span class="pre">Rfm69SerialDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/dev/ttyACM0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RFM69Serial.device.</span></span><span class="sig-name descname"><span class="pre">Rfm69SerialDevice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs_pin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int_pin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/dev/ttyACM0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">serial.Serial</span></code></p>
-<p>Serial port implementation for .NET/Mono.</p>
+<p>This class provides serial device objects that represent physical RFM69 module as if it is connected
+directly to PC/Laptop.
+Thus, device parameters such as addresses, pin configurations are passed to constructor to create a runnable
+serial device object.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="RFM69Serial.device.Rfm69SerialDevice.device_address">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice.device_address" title="Permalink to this definition">¶</a></dt>
@@ -66,6 +74,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="RFM69Serial.device.Rfm69SerialDevice.network_id">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">network_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice.network_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="RFM69Serial.device.Rfm69SerialDevice.chip_select_pin">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">chip_select_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice.chip_select_pin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="RFM69Serial.device.Rfm69SerialDevice.interrupt_pin">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">interrupt_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice.interrupt_pin" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -81,10 +99,10 @@ Note: it should noted that the device address in this library is currently limit
 the original Arduino RFM69 implement maximum 1024 nodes in a network. The reason is for simplicity.
 This may be reviewed and improved in the next version ;P</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>address</strong> – nominated address of the RFM69 module</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the device’s address is set, False otherwise.</p>
 </dd>
 </dl>
@@ -95,10 +113,10 @@ This may be reviewed and improved in the next version ;P</p>
 <span class="sig-name descname"><span class="pre">set_network_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice.set_network_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the network ID of RFM69 module, default value is 101</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>nid</strong> – nominated network ID, max 255</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the device’s network ID is set, False otherwise.</p>
 </dd>
 </dl>
@@ -110,14 +128,14 @@ This may be reviewed and improved in the next version ;P</p>
 <dd><p>Send a single message to target device specified by target address.
 This method covers the send() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>target_addr</strong> – the address of receiving Arduino board.</p></li>
 <li><p><strong>msg</strong> – message to send, message must be of type string or a list of byte values (0-255).</p></li>
 <li><p><strong>ack_request</strong> – acknowledge request status, if True, the request is embedded in the message.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the message is sent, False otherwise.</p>
 </dd>
 </dl>
@@ -129,7 +147,7 @@ This method covers the send() function in RFM69 Arduino library.</p>
 <dd><p>Send a single message a number (retries) of times to ensure the message deliverance.
 This method covers the sendWithRetry() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>target_addr</strong> – the address of receiving Arduino board.</p></li>
 <li><p><strong>msg</strong> – message to send, message must be of type string or a list of byte values (0-255)</p></li>
@@ -137,7 +155,7 @@ This method covers the sendWithRetry() function in RFM69 Arduino library.</p>
 <li><p><strong>time_out</strong> – each attempt waits for “time_out” miliseconds before moving to the next attempt.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the message is sent, False otherwise.</p>
 </dd>
 </dl>
@@ -149,7 +167,7 @@ This method covers the sendWithRetry() function in RFM69 Arduino library.</p>
 <dd><p>Change RFM69 module from TX to RX and wait for message to arrive.
 This method covers receiveBegin() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if state changed, False otherwise.</p>
 </dd>
 </dl>
@@ -161,7 +179,7 @@ This method covers receiveBegin() function in RFM69 Arduino library.</p>
 <dd><p>Check if there is a newly received message in device’s memory.
 This method covers receiveDone() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if there is a new message, False otherwise.</p>
 </dd>
 </dl>
@@ -186,10 +204,10 @@ Should be polled immediately after sending a packet with ACK request</p>
 <dd><p>Send back an acknowledge message to the sender if ACK_requested is detected.
 Should be called immediately after reception in case sender wants ACK.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>msg</strong> – some message to be sent along with ACK.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if ACK is sent, False otherwise.</p>
 </dd>
 </dl>
@@ -201,7 +219,7 @@ Should be called immediately after reception in case sender wants ACK.</p>
 <dd><p>Read the current frequency setting from RFM69 module.
 This method covers getFrequency() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>current set carrier frequency (in decimal) if read command succeeded. None if failed.</p>
 </dd>
 </dl>
@@ -213,10 +231,10 @@ This method covers getFrequency() function in RFM69 Arduino library.</p>
 <dd><p>Set the carrier frequency of RFM69 module to a specific value/
 This method covers getFrequency() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>freq</strong> – nominated carrier frequency to be set for the RFM69 module (in decimal)</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if set, False otherwise.</p>
 </dd>
 </dl>
@@ -228,12 +246,12 @@ This method covers getFrequency() function in RFM69 Arduino library.</p>
 <dd><p>Enable/Disable encryption feature on RFM69 module.
 This method covers encrypt() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>key</strong> – 16-byte long encryption key to be set for RFM69 module’s AES engine.
 If the key is set to null string (‘’), the encryption mode is disabled.
 If no key is provided, the encryption mode is set to be enabled with default key ‘samplekey16bytes’.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the command was acknowledge, False otherwie.</p>
 </dd>
 </dl>
@@ -245,10 +263,10 @@ If no key is provided, the encryption mode is set to be enabled with default key
 <dd><p>Set chip select pin on the serial device.
 This method covers setCS() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>pin</strong> – nominated dev board’s digital pin for chip select</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the pin is set, False otherwise.</p>
 </dd>
 </dl>
@@ -260,10 +278,10 @@ This method covers setCS() function in RFM69 Arduino library.</p>
 <dd><p>Set interrupt pin on the serial device.
 This method covers setIrq() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>pin</strong> – nominated dev board’s digital pin for interrupt function.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the pin is set, False otherwise.</p>
 </dd>
 </dl>
@@ -275,10 +293,10 @@ This method covers setIrq() function in RFM69 Arduino library.</p>
 <dd><p>Get signal strength value from RFM69 module.
 This method covers readRSSI() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>force</strong> – Force trigger state.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>RSSI value in decimal if read command is successful. None otherwise.</p>
 </dd>
 </dl>
@@ -290,10 +308,10 @@ This method covers readRSSI() function in RFM69 Arduino library.</p>
 <dd><p>Enable RFM69 module promiscuous mode to listen to any packet in the network.
 This method covers spyMode() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>enable</strong> – bool value to enable/disable the spy mode. default to False.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the command is successful. False otherwise.</p>
 </dd>
 </dl>
@@ -319,7 +337,7 @@ This method covers spyMode() function in RFM69 Arduino library.</p>
 <span class="sig-name descname"><span class="pre">sleep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice.sleep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put the RFM69 module into sleep mode.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if the module is set to sleep. False otherwise.</p>
 </dd>
 </dl>
@@ -341,10 +359,10 @@ This method covers spyMode() function in RFM69 Arduino library.</p>
 <dd><p>Read value from configuraton and status registers built-in RFM69 module.
 This method covers readReg() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>reg_addr</strong> – Register address, it must be of type bytes</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the current value of the register &#64;reg_addr if successful. None if failed.</p>
 </dd>
 </dl>
@@ -356,7 +374,7 @@ This method covers readReg() function in RFM69 Arduino library.</p>
 <dd><p>Write value to specific configuraton and status registers built-in RFM69 module.
 This method covers writeReg() function in RFM69 Arduino library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>reg_addr</strong> – Register address, it must be of type bytes</p></li>
 <li><p><strong>value</strong> – specific value to write to register &#64;reg_addr, must be of type bytes</p></li>
@@ -369,13 +387,14 @@ This method covers writeReg() function in RFM69 Arduino library.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="RFM69Serial.device.Rfm69SerialDevice.get_rx_data">
 <span class="sig-name descname"><span class="pre">get_rx_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice.get_rx_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Request rx data from the middle man.
-Note: The first byte of RX data is always the sender ID (address).</p>
+<dd><p>Request received data from RFM69 device.
+This method assumes that the caller already checked for message received status.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>If success, returns a list of data with the very first byte containing sender ID, else, None.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If success, returns a RFM69Packet object containing sender address and the received message.</p>
 </dd>
 </dl>
+<p>Else, None.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -383,7 +402,7 @@ Note: The first byte of RX data is always the sender ID (address).</p>
 <span class="sig-name descname"><span class="pre">is_device_connected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RFM69Serial.device.Rfm69SerialDevice.is_device_connected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if serial device is online and connected.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if the serial device is present and connected to PC, False otherwise</p>
 </dd>
 </dl>
@@ -391,8 +410,8 @@ Note: The first byte of RX data is always the sender ID (address).</p>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -410,6 +429,8 @@ Note: The first byte of RX data is always the sender ID (address).</p>
 <li><a class="reference internal" href="#RFM69Serial.device.Rfm69SerialDevice">Rfm69SerialDevice</a><ul>
 <li><a class="reference internal" href="#RFM69Serial.device.Rfm69SerialDevice.device_address">device_address</a></li>
 <li><a class="reference internal" href="#RFM69Serial.device.Rfm69SerialDevice.network_id">network_id</a></li>
+<li><a class="reference internal" href="#RFM69Serial.device.Rfm69SerialDevice.chip_select_pin">chip_select_pin</a></li>
+<li><a class="reference internal" href="#RFM69Serial.device.Rfm69SerialDevice.interrupt_pin">interrupt_pin</a></li>
 <li><a class="reference internal" href="#RFM69Serial.device.Rfm69SerialDevice.is_encrypted">is_encrypted</a></li>
 <li><a class="reference internal" href="#RFM69Serial.device.Rfm69SerialDevice.set_dev_address">set_dev_address</a></li>
 <li><a class="reference internal" href="#RFM69Serial.device.Rfm69SerialDevice.set_network_id">set_network_id</a></li>
@@ -451,6 +472,11 @@ Note: The first byte of RX data is always the sender ID (address).</p>
     <p class="topless"><a href="../index.html"
                           title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">RFM69Serial</span></code></a></p>
   </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../packet/index.html"
+                          title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">RFM69Serial.packet</span></code></a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -482,6 +508,9 @@ Note: The first byte of RX data is always the sender ID (address).</p>
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
+          <a href="../packet/index.html" title="RFM69Serial.packet"
+             >next</a> |</li>
+        <li class="right" >
           <a href="../index.html" title="RFM69Serial"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../../index.html">rfm69-serial 0.0.1 documentation</a> &#187;</li>
@@ -491,7 +520,7 @@ Note: The first byte of RX data is always the sender ID (address).</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2022, Long Pham.
+        &#169; Copyright 2022, longpear.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
