@@ -38,5 +38,6 @@ class RFM69Packet:
 
     def message_to_string(self):
         """Convert message data list to string if string type message is required by callers.
+        Note: string decode using utf-8
         """
-        return "".join([chr(item) for item in self._message_data])
+        return "".join([item.decode('utf-8') for item in self._message_data])

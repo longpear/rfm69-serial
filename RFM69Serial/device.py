@@ -430,23 +430,25 @@ class Rfm69SerialDevice(serial.Serial):
 
         :return: If success, returns a RFM69Packet object containing sender address and the received message.
         Else, None.
+        Also note that received message is a list of bytes object, use appropriate methods to convert it to other type.
         """
 
         rx_packet = RFM69Packet()
+        recv = []
 
         serial_cmd = b'$\x1E'
         self.write(serial_cmd)
 
-        recv = self.read()
+        recv.append(self.read())
         while self.in_waiting != 0:
-            recv += self.read()
+            recv.append(self.read())
         self.reset_input_buffer()
 
         ack_byte = recv[0]
-        rx_packet.sender = recv[1]
+        rx_packet.sender = ord(recv[1])
         rx_packet.message = recv[2:]
 
-        if ack_byte == 121:
+        if ack_byte == b'y':
             return rx_packet
         else:
             return None
