@@ -30,7 +30,7 @@ try:
         if dev.receive_done():
             msg_counter += 1
             recv = dev.get_rx_data()
-            print(f"Message [{msg_counter}]: Sender ID = {recv.sender} | Msg = {recv.messageToString()} ")
+            print(f"Message [{msg_counter}]: Sender ID = {recv.sender} | Msg = {recv.message_to_string()} ")
             dev.send_msg(recv.sender, recv.message_to_string())
             dev.begin_receive()
 
