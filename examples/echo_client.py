@@ -18,13 +18,15 @@ print("--------------------")
 try:
     while True:
         msg = input("> ")
-        dev.send_msg(server_addr, msg, ack_request=False)
+        while not dev.send_msg(server_addr, msg, ack_request=False):
+            time.sleep(1)
+        print("message sent!")
         t_start = time.perf_counter()
         dev.begin_receive()
         while time.perf_counter() - t_start < 1:
             if dev.receive_done():
                 recv = dev.get_rx_data()
-                if recv.sender == device_addr:
+                if recv.sender == server_addr:
                     print("echoed: ", recv.message_to_string())
 
 

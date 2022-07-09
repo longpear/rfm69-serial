@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rfm69-serial"
-version = "0.1.1"
+version = "0.1.2"
 description = "A serial bridge package to connect RFM69 module to PC"
 readme = "README.md"
 authors = [{ name = "Long Pham", email = "longpear@gmail.com" }]

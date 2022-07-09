@@ -4,8 +4,8 @@ from RFM69Serial import Rfm69SerialDevice
 
 
 # Test parameter set for physical boards
-cs_pin = 10
-int_pin = 8
+cs_pin = 7
+int_pin = 0
 device_addr = 2
 server_addr = 1
 network_id = 101

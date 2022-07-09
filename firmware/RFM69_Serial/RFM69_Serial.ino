@@ -49,31 +49,36 @@ RFM69 radio {CS_PIN, INT_PIN, false};
 
 // Prototype
 void begin_receive();
-void requestHandler( uint8_t );
+void requestHandler( uint8_t, uint8_t );
 
 
 // ***** SETUP *****
 
 void setup() {
-  // For Arduino boards, Serial initialization may be necessary.
+  // For some Arduino boards, Serial initialization may be necessary.
   // For Teensyduino, it is ignored!
-  //Serial.begin(9600);
+#ifdef ARDUINO_AVR_UNO
+  Serial.begin(115200);
+#elif defined (ARDUINO_SAMD_ZERO)
+  Serial.begin(1000000);
+#endif
+
 }
 
 // ***** MAIN LOOP *****
 
 void loop() {
   // Polling continuously for Serial requests
-  int byteCounter = 0;
+  uint8_t byteCounter = 0;
 
   while (Serial.available()) {
-    //delayMicroseconds(500); // Hardware delay buffer if Serial port is too slow.
+    delayMicroseconds(2000); // Hardware delay buffer if Serial port is too slow (typically on UNO)
     SERIAL_MSG[byteCounter] = (uint8_t)Serial.read();
     byteCounter += 1;
   }
 
   if (byteCounter != 0) {
-    requestHandler(SERIAL_MSG[1]);
+    requestHandler(SERIAL_MSG[1], byteCounter);
   } // end if
 } // end loop
 
@@ -97,7 +102,7 @@ void begin_receive() {
 }
 
 // request handler
-void requestHandler(uint8_t opcode) {
+void requestHandler(uint8_t opcode, uint8_t len) {
   bool ACK_Requested = false;
   int16_t rssi_v = 0;
   char encrypt_key[16];
@@ -105,7 +110,8 @@ void requestHandler(uint8_t opcode) {
   uint8_t msg[60];
 
   switch (opcode) {
-    
+
+    // bool initialize(uint8_t freqBand, uint16_t ID, uint8_t networkID=1);
     case 0x00: {
       // SERIAL_MSG[2] = device address
       // SERIAL_MSG[3] = network ID
@@ -123,7 +129,8 @@ void requestHandler(uint8_t opcode) {
         Serial.write(ko_code);
       break;
     }
-    
+
+// void setAddress(uint16_t addr);
     case 0x01: {
       // SERIAL_MSG[2] = device address
       radio.setAddress(SERIAL_MSG[2]);
@@ -131,6 +138,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void setNetwork(uint8_t networkID);
     case 0x02: {
       // SERIAL_MSG[2] = network ID
       radio.setNetwork(SERIAL_MSG[2]);
@@ -138,43 +146,59 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// virtual void send(uint16_t toAddress, const void* buffer, uint8_t bufferSize, bool requestACK=false);
     case 0x03: {
       // SERIAL_MSG[2] = target ID
       // SERIAL_MSG[3] = ACK Requested?
-      // SERIAL_MSG[4] = msg length (max 64)
+      // SERIAL_MSG[4] = msg length (max 60)
       // SERIAL_MSG[5 -> msg_length] = msg
-      for (int i = 0; i < SERIAL_MSG[4]; i++)
-        msg[i] = SERIAL_MSG[i+5];
-
-      ACK_Requested = (SERIAL_MSG[3] == 0) ? false : true;
-
-      radio.send(SERIAL_MSG[2], msg, SERIAL_MSG[4], ACK_Requested);
-      Serial.write(ok_code);
-      break;
+      if (len > 5) {
+        for (int i = 0; i < SERIAL_MSG[4]; i++)
+          msg[i] = SERIAL_MSG[i+5];
+  
+        ACK_Requested = (SERIAL_MSG[3] == 0) ? false : true;
+  
+        radio.send(SERIAL_MSG[2], msg, SERIAL_MSG[4], ACK_Requested);
+        Serial.write(ok_code);
+        break;
+      } 
+      else {
+        Serial.write(ko_code);
+        break;  
+      }
     }
 
+// virtual bool sendWithRetry(uint16_t toAddress, const void* buffer, uint8_t bufferSize, uint8_t retries=2, uint8_t retryWaitTime=RFM69_ACK_TIMEOUT);
     case 0x04: {
       // SERIAL_MSG[2] = target ID
       // SERIAL_MSG[3] = no of retries (max 255)
       // SERIAL_MSG[4] = time out (max 255 ms)
-      // SERIAL_MSG[5] = msg length (max 64)
+      // SERIAL_MSG[5] = msg length (max 60)
       // SERIAL_MSG[6 -> msg_length] = msg
-      for (int i = 0; i < SERIAL_MSG[4]; i++)
-        msg[i] = SERIAL_MSG[i+6];
-
-      if (radio.sendWithRetry(SERIAL_MSG[2], msg, SERIAL_MSG[5], SERIAL_MSG[3], SERIAL_MSG[4]))
-        Serial.write(ok_code);
-      else
+      if (len > 6) {
+        for (int i = 0; i < SERIAL_MSG[5]; i++)
+          msg[i] = SERIAL_MSG[i+6];
+  
+        if (radio.sendWithRetry(SERIAL_MSG[2], msg, SERIAL_MSG[5], SERIAL_MSG[3], SERIAL_MSG[4]))
+          Serial.write(ok_code);
+        else
+          Serial.write(ko_code);
+        break;
+      }
+      else {
         Serial.write(ko_code);
-      break;
+        break;
+      }
     }
 
+// void begin_receive();
     case 0x05: {
       begin_receive();
       Serial.write(ok_code);
       break;
     }
 
+// virtual bool receiveDone();
     case 0x06: {
       if (radio.receiveDone())
         Serial.write(ok_code);
@@ -183,6 +207,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// bool ACKReceived(uint16_t fromNodeID);
     case 0x07: {
       // SERIAL_MSG[2] = target ID
       if (radio.ACKReceived(SERIAL_MSG[2]))
@@ -192,6 +217,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// bool ACKRequested();
     case 0x08: {
       if (radio.ACKRequested())
         Serial.write(ok_code);
@@ -200,16 +226,24 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// virtual void sendACK(const void* buffer = "", uint8_t bufferSize=0);
     case 0x09: {
       // SERIAL_MSG[2] = msg_length (max 64)
       // SERIAL_MSG[3 -> msg_length] = msg
-      for (int i = 0; i < SERIAL_MSG[2]; i++)
-        msg[i] = SERIAL_MSG[i+3];
-      radio.sendACK(msg, SERIAL_MSG[2]);
-      Serial.write(ok_code);
-      break;
+      if (len > 3) {
+        for (int i = 0; i < SERIAL_MSG[2]; i++)
+          msg[i] = SERIAL_MSG[i+3];
+        radio.sendACK(msg, SERIAL_MSG[2]);
+        Serial.write(ok_code);
+        break;
+      }
+      else {
+        Serial.write(ko_code);
+        break;
+      }
     }
 
+// uint32_t getFrequency();
     case 0x0A: {
       // return 3 right most bytes of frequency (uint32_t)
       // require readReg()
@@ -223,6 +257,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void setFrequency(uint32_t freqHz);
     case 0x0B: {
       // This opcode just decorates setFrequency() function only, nothing else
       // SERIAL_MSG[2] = LSB Carrier Frequency
@@ -235,6 +270,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void encrypt(const char* key);
     case 0x0C: {
       // SERIAL_MSG[2] = enable encryption ?
       // SERIAL_MSG[3 -> 18] = key if enabled
@@ -249,6 +285,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void setCS(uint8_t newSPISlaveSelect);
     case 0x0D: {
       // SERIAL_MSG[2] = CS pin
       radio.setCS((uint8_t)SERIAL_MSG[2]);
@@ -256,6 +293,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// bool setIrq(uint8_t newIRQPin);
     case 0x0E: {
       // SERIAL_MSG[2] = INT0 pin
       radio.setIrq((uint8_t)SERIAL_MSG[2]);
@@ -263,6 +301,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// int16_t readRSSI(bool forceTrigger=false);
     case 0x0F: {
       // SERIAL_MSG[2] = forceTrigger ?
       rssi_v = -radio.readRSSI(SERIAL_MSG[2]);
@@ -271,6 +310,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void spyMode(bool onOff=true);
     case 0x10: {
       // SERIAL_MSG[2] = enabled ?
       radio.spyMode(SERIAL_MSG[2]);
@@ -278,6 +318,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// virtual void setHighPower(bool _isRFM69HW_HCW=true);
     case 0x11: {
       // SERIAL_MSG[2] = enabled ?
       radio.setHighPower(SERIAL_MSG[2]);
@@ -285,6 +326,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// virtual void setPowerLevel(uint8_t level);
     case 0x12: {
       // SERIAL_MSG[2] = power level (max 255)
       radio.setPowerLevel(SERIAL_MSG[2]);
@@ -297,6 +339,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// virtual uint8_t getPowerLevel(); 
     case 0x14: {
       // NO ARG
       Serial.write(ok_code);
@@ -304,6 +347,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void sleep();
     case 0x15: {
       // NO ARG
       radio.sleep();
@@ -311,6 +355,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// uint8_t readTemperature(uint8_t calFactor=0);
     case 0x16: {
       // SERIAL_MSG[2] = caclFactor
       Serial.write(ok_code);
@@ -318,6 +363,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void rcCalibration();
     case 0x17: {
       // NO ARG
       radio.rcCalibration();
@@ -325,6 +371,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void set300KBPS();
     case 0x18: {
       // NO ARG
       radio.set300KBPS();
@@ -332,6 +379,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// uint8_t setLNA(uint8_t newReg);
     case 0x19: {
       // SERIAL_MSG[2] = newReg
       Serial.write(ok_code);
@@ -339,6 +387,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// uint8_t readReg(uint8_t addr);
     case 0x1A: {
       // SERIAL_MSG[2] = Register Address
       Serial.write(ok_code);
@@ -346,6 +395,7 @@ void requestHandler(uint8_t opcode) {
       break;
     }
 
+// void writeReg(uint8_t addr, uint8_t val);
     case 0x1B: {
       // SERIAL_MSG[2] = Register Address
       // SERIAL_MSG[3] = Register Value
@@ -356,20 +406,33 @@ void requestHandler(uint8_t opcode) {
 
     // ... //
 
+// get_rx_data()
     case 0x1E: {
       SERIAL_MSG[0] = radio.SENDERID;
-      for (int i = 1; i <= radio.DATALEN; i++)
-        SERIAL_MSG[i] = radio.DATA[i-1];
+      SERIAL_MSG[1] = radio.DATALEN;
+      for (int i = 2; i <= radio.DATALEN+1; i++)
+        SERIAL_MSG[i] = radio.DATA[i-2];
       Serial.write(ok_code);
-      Serial.write(SERIAL_MSG, radio.DATALEN+1);
+      Serial.write(SERIAL_MSG, radio.DATALEN+2);
       break;
     }
 
+// is_device_connected
     case 0x1F: {
       Serial.write(ok_code);
       break;
     }
 
+// echo message for testing, cmd = '$t + msg'
+    case 0x74: {
+      Serial.write(ok_code);
+      for (int i = 2; i < len; i++) {
+        Serial.write(SERIAL_MSG[i]);
+      }
+      break;
+    }
+
+// if invalid opcode presents
     default: {
       // invalid opcode, send back ko_code
       Serial.write(ko_code);

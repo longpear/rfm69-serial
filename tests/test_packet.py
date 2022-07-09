@@ -6,7 +6,8 @@ class TestRFM69Packet(unittest.TestCase):
     def setUp(self) -> None:
         # instantiate a packet object which is sent from fake sender @ address 10
         self.testPacket = RFM69Packet(10)
-        self.testData = [0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64]
+        self.testData = [b'\x68', b'\x65', b'\x6C', b'\x6C', b'\x6F', b'\x20', b'\x77', b'\x6F', b'\x72', b'\x6C',
+                         b'\x64']
 
     def test_packet(self):
         self.assertIsInstance(self.testPacket, RFM69Packet)

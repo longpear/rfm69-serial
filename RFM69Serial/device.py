@@ -79,6 +79,9 @@ class Rfm69SerialDevice(serial.Serial):
         else:
             return False
 
+    # def _serial_get(self, command):
+    #     pass
+
     def _init_rf_module(self):
         """Initialize RFM69 module via Serial port.
         This function is called by the constructor method right after device parameters are established.
@@ -430,23 +433,20 @@ class Rfm69SerialDevice(serial.Serial):
 
         :return: If success, returns a RFM69Packet object containing sender address and the received message.
         Else, None.
-        Also note that received message is a list of bytes object, use appropriate methods to convert it to other type.
+        Also note that received message is a list of bytes object, use appropriate methods to convert it to
+        other type.
         """
 
         rx_packet = RFM69Packet()
-        recv = []
 
         serial_cmd = b'$\x1E'
         self.write(serial_cmd)
 
-        recv.append(self.read())
-        while self.in_waiting != 0:
-            recv.append(self.read())
-        self.reset_input_buffer()
-
-        ack_byte = recv[0]
-        rx_packet.sender = ord(recv[1])
-        rx_packet.message = recv[2:]
+        ack_byte = self.read()
+        rx_packet.sender = ord(self.read())
+        msg_len = ord(self.read())
+        for _ in range(0, msg_len):
+            rx_packet.message.append(self.read())
 
         if ack_byte == b'y':
             return rx_packet

@@ -6,12 +6,12 @@ This Python script implements a simple echo server using RFM69 Serial bridge.
 
 """
 
-
+import time
 from RFM69Serial import Rfm69SerialDevice
 
 # Parameter set for physical boards
-cs_pin = 10
-int_pin = 8
+cs_pin = 7
+int_pin = 0
 device_addr = 1
 network_id = 101
 device_port = "/dev/ttyACM0"
@@ -31,6 +31,7 @@ try:
             msg_counter += 1
             recv = dev.get_rx_data()
             print(f"Message [{msg_counter}]: Sender ID = {recv.sender} | Msg = {recv.message_to_string()} ")
+            time.sleep(0.2)
             dev.send_msg(recv.sender, recv.message_to_string())
             dev.begin_receive()
 
