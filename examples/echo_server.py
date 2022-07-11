@@ -10,13 +10,15 @@ import time
 from RFM69Serial import Rfm69SerialDevice
 
 # Parameter set for physical boards
-cs_pin = 7
-int_pin = 0
+cs_pin = 10
+int_pin = 8
 device_addr = 1
 network_id = 101
 device_port = "/dev/ttyACM0"
 
 dev = Rfm69SerialDevice(device_addr, network_id, cs_pin, int_pin, device_port)
+print(ord(dev.read_register(b'\x38')))
+dev.encrypt(key='a1b2c3d4e5f6g7h8')
 print("Echo server program")
 print("Server Address = ", device_addr)
 print("Network ID = ", network_id)
