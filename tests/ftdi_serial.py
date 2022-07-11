@@ -4,17 +4,15 @@
 # This is not automatic testing program
 
 import sys
-import serial
+import pyftdi.serialext
+from pyftdi.ftdi import Ftdi
 import time
 
 # Serial port init
-# ser = serial.Serial('/dev/ttyACM0', timeout=1)
-ser = serial.Serial('/dev/ttyUSB0', baudrate=2000000, timeout=1)
-# ser = serial.Serial('/dev/ttyACM0', baudrate=115200, timeout=1)
-# ser = serial.Serial('/dev/ttyACM1', baudrate=1000000, timeout=1)
+ser = pyftdi.serialext.serial_for_url('ftdi://ftdi:232:AD0JIPUE/1', baudrate=9600)
 
 # Serial port name
-print("Serial Device = ", ser.name)
+Ftdi.show_devices()
 
 # Test subject
 single_byte = b'a'
@@ -27,8 +25,8 @@ try:
         data = input("Send > ")
 
         start_time = time.perf_counter()
-        ser.write(data.encode('ascii'))
-        # ser.write(sample_msg64)
+        # ser.write(data.encode('ascii'))
+        ser.write(sample_msg64)
 
         recv = ser.read()   # initialize recv variable
 
@@ -37,7 +35,7 @@ try:
         # while ser.in_waiting != 0:
         #     recv += ser.read()
 
-        for _ in range(0, len(data)-1):
+        for _ in range(0, len(sample_msg64)-1):
             recv += ser.read()
 
         t_delay = (time.perf_counter() - start_time) * 1000

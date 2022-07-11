@@ -1,4 +1,3 @@
 *.log
 RFM69Serial/__pycache__/
 rfm69_serial.egg-info/
-/tests/test_serial.py
