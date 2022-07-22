@@ -30,7 +30,7 @@ class Rfm69SerialDevice(serial.Serial):
         # initialize RFM69 module
         t_start = time.perf_counter()
         while time.perf_counter() - t_start < 10:
-            time.sleep(0.1) # Hardware deceleration factor
+            time.sleep(0.1)     # Hardware deceleration factor
             if self._init_rf_module():
                 break
         else:
@@ -55,6 +55,10 @@ class Rfm69SerialDevice(serial.Serial):
     @property
     def is_encrypted(self):
         return self._is_encrypted
+
+    @property
+    def encryption_key(self):
+        return self._encryption_key
 
     def _serial_transfer(self, command) -> bool:
         """Perform single serial transaction for data exchange between PC and Arduino devices.
@@ -455,8 +459,12 @@ class Rfm69SerialDevice(serial.Serial):
 
     def is_device_connected(self):
         """Check if serial device is online and connected.
+        The strategy is to use read_register() method to figure out payload length (which is 66).
+        If the number 66 is returned, we know that both SPI and UART connection are good.
 
         :return: True if the serial device is present and connected to PC, False otherwise
         """
-        serial_cmd = b'$\x1F'
-        return self._serial_transfer(serial_cmd)
+        if ord(self.read_register(b'\x38')) == 66:
+            return True
+        else:
+            return False

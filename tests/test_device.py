@@ -4,8 +4,8 @@ from RFM69Serial import Rfm69SerialDevice
 
 
 # Test parameter set for physical boards
-cs_pin = 7
-int_pin = 0
+cs_pin = 10
+int_pin = 8
 device_addr = 2
 server_addr = 1
 network_id = 101
@@ -26,7 +26,7 @@ class TestRfm69SerialDevice(unittest.TestCase):
     def test_device_connected(self):
         self.assertTrue(self.test_device.is_device_connected())
 
-    @unittest.skip("Require RF module to perform")
+    @unittest.skip("Require other RF module to perform")
     def test_roundtrip(self):
         """Sending a message and receive it back from the receiver
 
@@ -37,7 +37,7 @@ class TestRfm69SerialDevice(unittest.TestCase):
         test_string = "test"
         target_addr = 2
 
-        self.test_device.send_msg(target_addr, test_string)
+        self.test_device.send_msg(target_addr, test_string, ack_request=False)
         t_start = time.perf_counter()
         self.test_device.begin_receive()
         while time.perf_counter() - t_start < 0.5:
@@ -65,8 +65,7 @@ class TestRfm69SerialDevice(unittest.TestCase):
         """This test confirms the validity of read_register() method
 
         In default system start-up by Arduino library, the register @address 0x38 specifies payload length,
-        which is 66.
-        Let's test the register value using read_register method
+        which is 66. Let's test the register value using read_register method!
         """
         reg_addr = b'\x38'
         reg_value = self.test_device.read_register(reg_addr)
@@ -85,6 +84,15 @@ class TestRfm69SerialDevice(unittest.TestCase):
         time.sleep(1)
         recv_value = self.test_device.read_register(reg_addr)
         self.assertEqual(reg_value, recv_value)
+
+    def test_encryption(self):
+        """This test validates encryption method by enabling encryption feature and change
+        its encryption key, asserting the change.
+        """
+        the_key = 'a0b1c2d3e4f5g6h7'
+        self.test_device.encrypt(the_key)
+        self.assertTrue(self.test_device.is_encrypted)
+        self.assertEqual(the_key, self.test_device.encryption_key)
 
     def tearDown(self) -> None:
         self.test_device.sleep()

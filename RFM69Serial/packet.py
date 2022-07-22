@@ -16,6 +16,8 @@ class RFM69Packet:
 
     @property
     def sender(self):
+        """Property sender ID uses integer number (0-255) to identify the address of transmitters
+        """
         return self._sender_addr
 
     @sender.setter
@@ -27,6 +29,7 @@ class RFM69Packet:
 
     @property
     def message(self):
+        """Property message holds the message from the sender which a list of element type bytes()"""
         return self._message_data
 
     @message.setter
@@ -41,3 +44,7 @@ class RFM69Packet:
         Note: string decode using utf-8
         """
         return "".join([item.decode('utf-8') for item in self._message_data])
+
+    def message_to_int(self):
+        """Convert message data list to a list of integer number that represents the raw value"""
+        return [ord(item) for item in self._message_data]
