@@ -14,7 +14,7 @@ cs_pin = 10     # Teensy server
 int_pin = 8
 device_addr = 1
 network_id = 101
-device_port = "/dev/ttyACM0"
+device_port = "/dev/ttyACM0"    # `ls /dev` to find out your device port
 
 dev = Rfm69SerialDevice(device_addr, network_id, cs_pin, int_pin, device_port)
 if dev.is_device_connected():

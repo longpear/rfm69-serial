@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 
+"""
+##### RFM69 PING TEST SCRIPT #####
+This program implements a ping test tool for RFM69 serial devices.
+Note: this program assumes that there is already another server/RF device at address 1 on the same RFM69 network.
+
+"""
+
 import sys
 import time
 from RFM69Serial import Rfm69SerialDevice
 
 # Parameter set for physical boards
-cs_pin = 10
+cs_pin = 10     # Teensy device
 int_pin = 8
 device_addr = 2
 server_addr = 1
@@ -66,4 +73,3 @@ except KeyboardInterrupt:
     print("Stopped by user")
     dev.close()
     sys.exit(0)
-

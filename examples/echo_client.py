@@ -1,19 +1,30 @@
+#!/usr/bin/env python3
+
+"""
+##### RFM69 ECHO CLIENT SCRIPT #####
+This program takes input from user, then sends it to server side through RFM69 network.
+The program expects the same message echoed from the server, then displays the messase and signal strength.
+"""
+
 import time
 from RFM69Serial import Rfm69SerialDevice
 
 # Parameter set for physical boards
-cs_pin = 10
-int_pin = 8
-device_addr = 3
-server_addr = 2
+cs_pin = 7  # Arduino MKRZERO Client
+int_pin = 0
+device_addr = 2
+server_addr = 1
 network_id = 101
-device_port = "/dev/ttyACM0"
+device_port = "/dev/ttyACM0"    # `ls /dev` to find out your device port
 
+# instantiate serial device object
 dev = Rfm69SerialDevice(device_addr, network_id, cs_pin, int_pin, device_port)
 if dev.is_device_connected():
     print("Serial device is online, RF module is ready!")
-# dev.encrypt(key='a1b2c3d4e5f6g7h8')
 
+dev.encrypt(key='a1b2c3d4e5f6g7h8')     # Comment out to disable encryption feature
+
+# Main program
 print("Echo client program")
 print("Client Address = ", device_addr)
 print("Server address = ", server_addr)
