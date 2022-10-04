@@ -12,8 +12,7 @@ readme = "README.md"
 authors = [{ name = "Long Pham", email = "longpear@gmail.com" }]
 license = { file = "LICENSE" }
 classifiers = [
-    "License :: OSI Approved :: GPL v3 License",
-    "Programming Language :: Python",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Programming Language :: Python :: 3",
 ]
 keywords = ["rfm69", "serial", "bridge"]
@@ -21,6 +20,12 @@ dependencies = [
     "pyserial >= 3.0",
 ]
 requires-python = ">=3.6"
+
+[tool.setuptools.packages.find]
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["RFM69Serial", "examples", "docs"]  # package names should match these glob patterns (["*"] by default)
+exclude = ["firmware", "img", "tests"]  # exclude packages matching these glob patterns (empty by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [project.urls]
 Homepage = "https://github.com/longpear/rfm69-serial"

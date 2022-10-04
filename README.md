@@ -22,7 +22,7 @@ The connection diagram is shown as below:
 The firmware code for Arduino/Teensy device is included in **firmware/RFM69_Serial** directory. The code is based on well-known
 RFM69 library from LowPowerLab @https://github.com/LowPowerLab/RFM69. The program is written in Arduino language (C++) with 
 a set of commands (pre-defined by command opcode table). At the system start-up, the device is connected to PC using its USB port. 
-After some initialization, the device sits idle waiting for the command opcode (and possibly data) to be transferred through USB port. 
+After initialization process, the device sits idle waiting for the command opcode (and possibly data) to be transferred through USB port. 
 The program selects the corresponding function and executes them to communicate with physical RFM69 module through SPI connection.
 After execution of the command, the device go back to waiting state, ready for the next command to be transferred.
 
@@ -42,6 +42,12 @@ with correct system parameter set for corresponding physical board (see examples
 
 Installation
 ------------
+### Firmware Installation
+RFM69 Serial project currently supports all Arduino devices as well as devices that use Arduino IDE. The firmware (Arduino sketch)
+can be found in **firmware/RFM69_Serial/RFM69_Serial.ino**. The only thing needed to be done is to upload the sketch to your 
+Arduino device.
+
+### Python Library Installation
 For general usage, user can install the package from PyPi:
 
 `python3 -m pip install rfm69-serial`
